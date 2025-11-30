@@ -31,7 +31,36 @@ public abstract class Vehicle {
     }
 
     public void setLicensePlate(String plate) {
-        this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	//Throws exception if the plate is not valid 
+    	if(isValid(plate)) { 
+    		 this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	}else {
+    		throw new IllegalArgumentException("Invalid License Plate entered.");  //Throws exception since plate is not valid .
+    	}
+    }
+    private boolean isValid(String plate) { 
+    	//Checks if the plate is null,empty or has a length that is not equal to 6.
+    	if(plate == null || plate.isEmpty() || plate.length() != 6) {
+    		return false;
+    	 }
+    	//Loops through first three items to check if they are characters
+    	for(int i =0;i < 3;i++){
+    		char item = plate.charAt(i);
+    		//Checks if the item is a character
+    		if(!Character.isLetter(item)) {
+    			return false; 
+    		}
+    	 } 
+    	//Loops through the last three to check if they are numbers.
+    	for(int i =3;i < 6;i++){ 
+    		char item = plate.charAt(i); 
+    		//Checks if the item is a digit
+    		if(!Character.isDigit(item)) {
+    			return false; 
+    		} 
+    	}
+
+    	return true;  //Returns true since the plate is valid 
     }
 
     public void setStatus(VehicleStatus status) {
