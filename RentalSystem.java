@@ -1,6 +1,7 @@
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -242,7 +243,11 @@ public class RentalSystem {
      
      private void loadVehicles() {
      	try {
- 			BufferedReader reader = new BufferedReader(new FileReader("vehicles.txt"));
+     		File file = new File("vehicles.txt");
+    		if (!file.exists()) {
+    		    return;  // skips the method since the file hasnt been created yet.
+    		}
+			BufferedReader reader = new BufferedReader(new FileReader(file));
  			String line;
  			while((line = reader.readLine()) != null) {
  				//Moves to next line if the line is empty
@@ -286,7 +291,11 @@ public class RentalSystem {
      }
      private void loadCustomers() {
      	try {
- 			BufferedReader reader = new BufferedReader(new FileReader("customers.txt"));
+     		File file = new File("customers.txt");
+    		if (!file.exists()) {
+    		    return;  // skips the method since the file hasnt been created yet.
+    		}
+			BufferedReader reader = new BufferedReader(new FileReader(file));
  			String line;
  			while((line = reader.readLine()) != null) {
  				//Moves to next line if the line is empty
@@ -310,7 +319,11 @@ public class RentalSystem {
      }
      private void loadRecords() {
      	try {
- 			BufferedReader reader = new BufferedReader(new FileReader("rental_records.txt"));
+     		File file = new File("rental_records.txt");
+    		if (!file.exists()) {
+    		    return;  // skips the method since the file hasnt been created yet.
+    		}
+			BufferedReader reader = new BufferedReader(new FileReader(file));
  			String line;
  			while((line = reader.readLine()) != null) {
  				//Moves to next line if the line is empty
