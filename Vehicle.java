@@ -1,3 +1,4 @@
+
 public abstract class Vehicle {
     private String licensePlate;
     private String make;
@@ -6,21 +7,23 @@ public abstract class Vehicle {
     private VehicleStatus status;
 
     public enum VehicleStatus { Available, Held, Rented, UnderMaintenance, OutOfService }
-
     public Vehicle(String make, String model, int year) {
-    	if (make == null || make.isEmpty())
-    		this.make = null;
-    	else
-    		this.make = make.substring(0, 1).toUpperCase() + make.substring(1).toLowerCase();
     	
-    	if (model == null || model.isEmpty())
-    		this.model = null;
-    	else
-    		this.model = model.substring(0, 1).toUpperCase() + model.substring(1).toLowerCase();
+    	this.make = capitalize(make);
+    	this.model = capitalize(model);
     	
         this.year = year;
         this.status = VehicleStatus.Available;
-        this.licensePlate = null;
+        this.licensePlate = null;  
+        
+    }
+    
+    private String capitalize(String input) {
+    	//Checks if input is null or empty
+    	if(input == null || input.isEmpty()) 
+    		return null;
+    	else
+    		return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase(); //Returns the capitalized input
     }
 
     public Vehicle() {
