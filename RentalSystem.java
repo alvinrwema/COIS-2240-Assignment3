@@ -1,4 +1,7 @@
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -17,10 +20,12 @@ public class RentalSystem {
 
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
+        saveVehicle(vehicle);  //saves the vehicle to a file.
     }
 
     public void addCustomer(Customer customer) {
         customers.add(customer);
+        saveCustomer(customer); //Saves the customer to a file.
     }
 
     public void rentVehicle(Vehicle vehicle, Customer customer, LocalDate date, double amount) {
@@ -28,6 +33,7 @@ public class RentalSystem {
             vehicle.setStatus(Vehicle.VehicleStatus.Rented);
             rentalHistory.addRecord(new RentalRecord(vehicle, customer, date, amount, "RENT"));
             System.out.println("Vehicle rented to " + customer.getCustomerName());
+            saveRecord(new RentalRecord(vehicle, customer, date, amount, "RENT")); //Saves the rent record a file.
         }
         else {
             System.out.println("Vehicle is not available for renting.");
@@ -39,6 +45,7 @@ public class RentalSystem {
             vehicle.setStatus(Vehicle.VehicleStatus.Available);
             rentalHistory.addRecord(new RentalRecord(vehicle, customer, date, extraFees, "RETURN"));
             System.out.println("Vehicle returned by " + customer.getCustomerName());
+            saveRecord(new RentalRecord(vehicle, customer, date, extraFees, "RETURN")); //Saves the return record to a file.
         }
         else {
             System.out.println("Vehicle is not rented.");
@@ -129,4 +136,103 @@ public class RentalSystem {
                 return c;
         return null;
     }
+    
+    //Saves Vehicle details
+    public void saveVehicle(Vehicle vehicle) {
+    	try {
+			BufferedWriter writer  = new BufferedWriter(new FileWriter("vehicles.txt",true)); //Writes to the vehicles.txt in append mode.
+			String type;
+			
+			if (vehicle instanceof Car) {
+                type = "Car";
+				Car car = (Car) vehicle;
+				writer.write(type + "," + vehicle.getLicensePlate() + "," + vehicle.getMake() + "," +
+								vehicle.getModel() + "," + vehicle.getYear() + "," + car.getNumSeats()
+				);
+		   }
+		   else if (vehicle instanceof Minibus) {
+                type = "Minibus";
+                Minibus minibus = (Minibus) vehicle;
+                writer.write(type + "," + vehicle.getLicensePlate() + "," +
+						vehicle.getMake() + "," + vehicle.getModel() + "," + vehicle.getYear() + "," + minibus.getIsAccessible()
+				);
+		   }
+		   else {
+			   type = "PickupTruck";
+			   
+			   PickupTruck pickupTruck = (PickupTruck) vehicle;
+			   
+			   writer.write(type + "," + vehicle.getLicensePlate() + "," + vehicle.getMake() + "," + 
+					   vehicle.getModel() + "," + vehicle.getYear() +  "," + pickupTruck.getCargoSize() +  "," + pickupTruck.hasTrailer()
+				);
+			   
+		   }
+			writer.newLine(); // creates a newline after inserting the vehicle details.
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    //Saves the customers details to a file.
+    public void saveCustomer(Customer customer) {
+    	try {
+			BufferedWriter writer  = new BufferedWriter(new FileWriter("customers.txt",true)); //saves the customers details to customers.txt in append mode
+			writer.write(customer.getCustomerId() + "," + customer.getCustomerName() );
+			writer.newLine(); // creates a newline after inserting the customer details.
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    //Saves both the rent and return records to a file
+    public void saveRecord(RentalRecord record) {
+    	try {
+			BufferedWriter writer  = new BufferedWriter(new FileWriter("rental_records.txt",true)); //saves the rental record details to rental_records in append mode.
+			//Gets the vehicle and customer class  details from the record passed.
+			Vehicle vehicle = record.getVehicle();
+			Customer customer = record.getCustomer();
+			
+			String type;
+			//Writes to the file depending on the type of vehicle used.
+			if (vehicle instanceof Car) {
+                type = "Car";
+                Car car = (Car) vehicle;
+				writer.write(type + "," + vehicle.getLicensePlate() + "," + vehicle.getMake() + "," + vehicle.getModel() + "," + vehicle.getYear() + "," +
+								car.getNumSeats()+ ","+ customer.getCustomerId() + "," + customer.getCustomerName() + "," + record.getRecordDate() +   "," +
+								record.getTotalAmount() + "," + record.getRecordType()
+				);
+			}	
+			else if (vehicle instanceof Minibus) {
+                type = "Minibus";
+                Minibus minibus = (Minibus) vehicle;
+                writer.write(type + "," + vehicle.getLicensePlate() + "," +
+						vehicle.getMake() + "," + vehicle.getModel() + "," + vehicle.getYear() + "," + minibus.getIsAccessible() + ","+ customer.getCustomerId() + "," + customer.getCustomerName() + "," + record.getRecordDate() +   "," +
+								record.getTotalAmount() +   "," + record.getRecordType()
+				);   
+			}
+            else {
+                type = "Pickup Truck";
+                PickupTruck pickupTruck = (PickupTruck) vehicle;
+ 			   
+                writer.write(type + "," + vehicle.getLicensePlate() + "," + vehicle.getMake() + "," + vehicle.getModel() + "," + 
+                		vehicle.getYear() +  "," + pickupTruck.getCargoSize() +  "," + pickupTruck.hasTrailer() + "," + customer.getCustomerId() + "," + customer.getCustomerName() + "," + record.getRecordDate() +   "," +
+								record.getTotalAmount() +   "," + record.getRecordType()
+ 				);
+                
+            }
+			
+			writer.newLine(); // creates a newline after inserting the record details.
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    }
+    
+    
 }
