@@ -22,14 +22,32 @@ public class RentalSystem {
     private List<Customer> customers = new ArrayList<>();
     private RentalHistory rentalHistory = new RentalHistory();
 
-    public void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
-        saveVehicle(vehicle);  //saves the vehicle to a file.
+    public boolean addVehicle(Vehicle vehicle) {
+    	
+    	//Checks for duplicate vehicle
+    	if(findVehicleByPlate(vehicle.getLicensePlate() ) != null) {
+    		System.out.printf("Error: A Vehicle with number plate %s is already in the system \n",vehicle.getLicensePlate());
+    		return false;
+    	}
+    	
+    	//Adds vehicle since no duplicate found
+    	vehicles.add(vehicle);
+    	saveVehicle(vehicle);
+    	return true;
+    	
     }
 
-    public void addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) {
+    	//Checks for duplicate customer
+    	if(findCustomerById(customer.getCustomerId()) != null) {
+    		System.out.printf("Error:A customer with id %d is already in the system. \n",customer.getCustomerId());
+    		return false;
+    	}
+    	
+    	//Adds the customer since no duplicate found
         customers.add(customer);
-        saveCustomer(customer); //Saves the customer to a file.
+        saveCustomer(customer); 
+        return true;
     }
 
     public void rentVehicle(Vehicle vehicle, Customer customer, LocalDate date, double amount) {

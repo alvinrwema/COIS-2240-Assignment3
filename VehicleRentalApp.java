@@ -40,12 +40,10 @@ public class VehicleRentalApp {
                         System.out.print("Enter number of seats: ");
                         int seats = scanner.nextInt();
                         vehicle = new Car(make, model, year, seats);
-                        System.out.println("Car added successfully.");
                     } else if (type == 2) {
                         System.out.print("Is accessible? (true/false): ");
                         boolean isAccessible = scanner.nextBoolean();
                         vehicle = new Minibus(make, model, year, isAccessible);
-                        System.out.println("Minibus added successfully.");
 		            } else if (type == 3) {
 		                System.out.print("Enter the cargo size: ");
 		                double cargoSize = scanner.nextDouble();
@@ -53,14 +51,16 @@ public class VehicleRentalApp {
 		                System.out.print("Has trailer? (true/false): ");
 		                boolean hasTrailer = scanner.nextBoolean();
 		                vehicle = new PickupTruck(make, model, year, cargoSize, hasTrailer);
-		                System.out.println("Pickup Truck added successfully.");
 		            } else {
 		            	vehicle = null;
 		            }
                     
                     if (vehicle != null){
-	                    vehicle.setLicensePlate(plate);
-	                    rentalSystem.addVehicle(vehicle);
+	                    vehicle.setLicensePlate(plate);   
+	                    boolean added = rentalSystem.addVehicle(vehicle); //Receives true/false to check if the vehicle could be added.
+	                    if(added) {
+	                    	System.out.println("Vehicle added successfully.");
+	                    }
                     }
                     else {
 	                    System.out.println("Vehicle not added successfully.");
@@ -73,9 +73,10 @@ public class VehicleRentalApp {
                     scanner.nextLine(); // Consume the leftover newline
                     System.out.print("Enter name: ");
                     String cname = scanner.nextLine();
-
-                    rentalSystem.addCustomer(new Customer(cid, cname));
-                    System.out.println("Customer added successfully.");
+                    boolean added = rentalSystem.addCustomer(new Customer(cid, cname));//Receives true/false based on whether customer was added.
+                    if(added) {
+                    	 System.out.println("Customer added successfully.");
+                    }
                     break;
                     
                 case 3:
